@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.DemoMapper">
+
+	<resultMap id="demo" type="com.example.demo.dto.Demo">
+		<id column="DEMO_ID" property="id" jdbcType="VARCHAR" />
+		<result column="DEMO" property="demo" jdbcType="VARCHAR" />
+		<result column="DEMO_DESC" property="desc" jdbcType="VARCHAR" />
+		<collection property="subDemos" javaType="java.util.Collection" column="SUBDEMO_ID" ofType="com.example.demo.dto.SubDemo"/>
+	</resultMap>
+
+	<resultMap id="subDemo" type="com.example.demo.dto.SubDemo">
+		<id column="SUBDEMO_ID" property="id" jdbcType="VARCHAR" />
+		<id column="SUBDEMO_DEMO_ID" property="demoId" jdbcType="VARCHAR" />
+		<result column="SUBDEMO" property="subdemo" jdbcType="VARCHAR" />
+		<result column="SUBDEMO_DESC" property="desc" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="demoColumns">
+		DEMO.ID AS DEMO_ID,
+		DEMO.DEMO AS DEMO,
+		DEMO.DESC AS DEMO_DESC
+	</sql>
+	
+	<sql id="subDemoColumns">
+		SUBDEMO.ID AS SUBDEMO_ID,
+		SUBDEMO.DEMO_ID AS SUBDEMO_DEMO_ID,
+		SUBDEMO.SUBDEMO AS SUBDEMO,
+		SUBDEMO.DESC AS DESC
+	</sql>
+	
+	<select id="getExistingDemo" resultMap="demo">
+		SELECT 
+		  	<trim suffixOverrides=",">
+				  <include refid="demoColumns" />
+			</trim>
+	  	FROM DEMO DEMO 
+	  	WHERE DEMO.ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	
+</mapper>
